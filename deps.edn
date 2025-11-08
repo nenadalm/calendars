@@ -1,0 +1,8 @@
+{:paths ["src"]
+ :deps {org.clojure/clojure {:mvn/version "1.11.3"}
+        org.jsoup/jsoup {:mvn/version "1.17.2"}}
+ :aliases
+ {:cljfmt {:extra-deps {cljfmt/cljfmt {:mvn/version "0.9.2"}}
+           :main-opts ["-m" "cljfmt.main"]}
+  :clj-kondo {:extra-deps {clj-kondo/clj-kondo {:mvn/version "2024.05.24"}}
+              :main-opts ["-m" "clj-kondo.main" "--lint" "src"]}}}

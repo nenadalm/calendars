@@ -1,0 +1,40 @@
+on:
+  schedule:
+    - cron: '0 0 * * mon'
+  workflow_dispatch: ~
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    concurrency:
+      group: ${{ github.workflow }}-deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+      - uses: DeLaGuardo/setup-clojure@master
+        with:
+          cli: '1.11.3.1463'
+      - uses: actions/cache@v4
+        with:
+          path: '~/.m2'
+          key: "${{ runner.os }}-maven-${{ hashFiles('deps.edn') }}"
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Build artifacts
+        run: |
+          clojure -X app.core/build-web
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: web/resources/public
