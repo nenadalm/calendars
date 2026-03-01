@@ -33,7 +33,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
       - run: sudo apt install --no-install-recommends tesseract-ocr
-      - name: Build artifacts
+      - name: Update calendars
         run: |
           clojure -X app.core/build-web
       - name: Deploy

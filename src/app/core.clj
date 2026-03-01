@@ -36,8 +36,10 @@
   (into
    []
    (keep (fn [img]
-           (let [src (.getValue (.attribute img  "src"))]
-             (when (str/starts-with? src "https://")
+           (let [src (some-> img
+                             (.attribute "data-src")
+                             (.getValue))]
+             (when (and src (str/starts-with? src "https://"))
                src))))
    (.select doc "#carousel img")))
 
